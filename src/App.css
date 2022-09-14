@@ -211,8 +211,7 @@ button:active {
 /*mobile*/
 @media (max-width: 768px) {
   .app {
-    padding: 5px;
-    height: 100%;
+    padding-top: 10px;
     align-items: center;
     gap: 10px;
   }
@@ -278,7 +277,7 @@ table {
   border-radius: 15px;
   border-collapse: collapse;
   box-shadow: 6px 6px 18px 10px var(--roxo);
-  color: --roxo;
+  color: var(--roxo);
   max-width: 510px;
 }
 th,
@@ -306,4 +305,8 @@ tbody {
   font-size: 16px;
   font-family: "Rajdhani", sans-serif;
   font-weight: 600;
+}
+a {
+  text-decoration: none;
+  color: var(--roxo);
 }

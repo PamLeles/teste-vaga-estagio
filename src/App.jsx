@@ -78,7 +78,22 @@ function App() {
               <th>Ações</th>
             </tr>
           </thead>
-          <tbody id="table-content"></tbody>
+          <tbody id="table-content">
+            <tr>
+              <td>12345</td>
+              <td>empresa 1</td>
+              <td>
+                <a href="#">Edit</a>
+              </td>
+            </tr>
+            <tr>
+              <td>678910</td>
+              <td>empresa 2</td>
+              <td>
+                <a href="#">Edit</a>
+              </td>
+            </tr>
+          </tbody>
         </table>
       </section>
     </div>
