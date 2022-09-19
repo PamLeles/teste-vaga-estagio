@@ -1,66 +1,100 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0);
+  //atualizar a tela, atraves de uma mudança se usa o useState
+  const [data, setData] = useState([]);
+  const cnpjRef = useRef();
+  const nameRef = useRef();
+  const cepRef = useRef();
+  const addressRef = useRef();
+  const numberRef = useRef();
+  const districtRef = useRef();
 
+  function saveForm(event) {
+    event.preventDefault();
+    const copyData = [...data];
+    /*O método push() adiciona um ou mais elementos ao final 
+    de um array e retorna o novo comprimento(lenght) do array.*/
+    copyData.push({
+      cnpj: cnpjRef.current.value,
+      name: nameRef.current.value,
+      cep: cepRef.current.value,
+      address: addressRef.current.value,
+      number: numberRef.current.value,
+      district: districtRef.current.value,
+    });
+
+    //campos do formulário vázio
+    cnpjRef.current.value = "";
+    nameRef.current.value = "";
+    cepRef.current.value = "";
+    addressRef.current.value = "";
+    numberRef.current.value = "";
+    districtRef.current.value = "";
+    //setData está atualizando os dados do data;
+    setData(copyData);
+    //para pegar o valor atualizado, "procuramos" no data
+  }
+  console.log(data);
   return (
-    <div class="app">
-      <form class="form">
-        <h1 class="form-title">Formulário de Cadastro</h1>
-        <div class="label-div">
+    <div className="app">
+      <form className="form">
+        <h1 className="form-title">Formulário de Cadastro</h1>
+        <div className="label-div">
           <label>
             CNPJ:
-            <input type="number" id="cnpj" required />
+            <input type="number" id="cnpj" required ref={cnpjRef} />
           </label>
 
           <label>
             Nome da empresa:
-            <input type=" text" id="name" required />
+            <input type=" text" id="nomeEmpresa" required ref={nameRef} />
           </label>
 
           <label>
             CEP:
-            <input type="number" id="cep" required />
+            <input type="number" id="cep" required ref={cepRef} />
           </label>
 
           <label>
             Endereço:
-            <input type=" text" id="address" required />
+            <input type=" text" id="address" required ref={addressRef} />
           </label>
 
           <label>
             Número:
-            <input type="number" class="input-number" required />
+            <input
+              type="number"
+              className="input-number"
+              required
+              ref={numberRef}
+            />
           </label>
 
           <label>
             Bairro:
-            <input type="text" id="district" required />
+            <input type="text" id="district" required ref={districtRef} />
           </label>
-          <div class="actions-wrapper">
-            <label class="label-uf-city">
+          <div className="actions-wrapper">
+            <label className="label-uf-city">
               UF:
               <select id="select-uf">
-                <option value="" disabled selected>
-                  Insira o CEP
-                </option>
+                <option>Insira o CEP</option>
               </select>
             </label>
 
-            <label class="label-uf-city">
+            <label className="label-uf-city">
               cidade:
               <select id="select-city">
-                <option value="" disabled selected>
-                  Insira o CEP
-                </option>
+                <option>Insira o CEP</option>
               </select>
             </label>
           </div>
 
-          <div class="actions-wrapper">
-            <button class="btn-cancel">Limpar</button>
-            <button class="btn-save" onclick="saveForm(event)">
+          <div className="actions-wrapper">
+            <button className="btn-cancel">Limpar</button>
+            <button className="btn-save" onClick={(event) => saveForm(event)}>
               Salvar
             </button>
           </div>
@@ -79,20 +113,15 @@ function App() {
             </tr>
           </thead>
           <tbody id="table-content">
-            <tr>
-              <td>12345</td>
-              <td>empresa 1</td>
-              <td>
-                <a href="#">Edit</a>
-              </td>
-            </tr>
-            <tr>
-              <td>678910</td>
-              <td>empresa 2</td>
-              <td>
-                <a href="#">Edit</a>
-              </td>
-            </tr>
+            {data.map((item, index) => {
+              return (
+                <tr key={index}>
+                  <td>{item.cnpj}</td>
+                  <td>{item.name}</td>
+                  <a href="#">Edit</a>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </section>
