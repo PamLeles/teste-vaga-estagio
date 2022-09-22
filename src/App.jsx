@@ -4,26 +4,43 @@ import "./App.css";
 function App() {
   //atualizar a tela, atraves de uma mudança se usa o useState
   const [data, setData] = useState([]);
+  const [selectedRow, setSelectedRow] = useState(null);
+  const [dataCep, setDataCEP] = useState([]);
   const cnpjRef = useRef();
   const nameRef = useRef();
   const cepRef = useRef();
   const addressRef = useRef();
   const numberRef = useRef();
   const districtRef = useRef();
+  const ufRef = useRef();
+  const cityRef = useRef();
 
   function saveForm(event) {
     event.preventDefault();
     const copyData = [...data];
-    /*O método push() adiciona um ou mais elementos ao final 
+    /* essa validaçõa vai funcionar quando for clicada em edit e for salva a nova atualização*/
+    if (typeof selectedRow === "number") {
+      copyData[selectedRow].cnpj = cnpjRef.current.value;
+      copyData[selectedRow].name = nameRef.current.value;
+      copyData[selectedRow].cep = cepRef.current.value;
+      copyData[selectedRow].address = addressRef.current.value;
+      copyData[selectedRow].number = numberRef.current.value;
+      copyData[selectedRow].district = districtRef.current.value;
+      setSelectedRow(null);
+    } else {
+      /*O método push() adiciona um ou mais elementos ao final 
     de um array e retorna o novo comprimento(lenght) do array.*/
-    copyData.push({
-      cnpj: cnpjRef.current.value,
-      name: nameRef.current.value,
-      cep: cepRef.current.value,
-      address: addressRef.current.value,
-      number: numberRef.current.value,
-      district: districtRef.current.value,
-    });
+      copyData.push({
+        cnpj: cnpjRef.current.value,
+        name: nameRef.current.value,
+        cep: cepRef.current.value,
+        address: addressRef.current.value,
+        number: numberRef.current.value,
+        district: districtRef.current.value,
+        city: cityRef.current.value,
+        uf: ufRef.current.value,
+      });
+    }
 
     //campos do formulário vázio
     cnpjRef.current.value = "";
@@ -36,7 +53,29 @@ function App() {
     setData(copyData);
     //para pegar o valor atualizado, "procuramos" no data
   }
-  console.log(data);
+
+  //adicionando api cep
+  const checkCep = (e) => {
+    const cep = e.target.value.replace(/\D/g, "");
+    fetch(`https://viacep.com.br/ws/${cep}/json/`)
+      .then((res) => res.json())
+      .then((data) => {
+        cep.length === 8;
+        console.log(data);
+      });
+  };
+
+  async function handleEdit(index) {
+    //[index] = posição dentro do array;
+    setSelectedRow(index);
+    cnpjRef.current.value = data[index].cnpj;
+    nameRef.current.value = data[index].name;
+    cepRef.current.value = data[index].cep;
+    addressRef.current.value = data[index].address;
+    numberRef.current.value = data[index].number;
+    districtRef.current.value = data[index].district;
+  }
+
   return (
     <div className="app">
       <form className="form">
@@ -54,7 +93,13 @@ function App() {
 
           <label>
             CEP:
-            <input type="number" id="cep" required ref={cepRef} />
+            <input
+              type="number"
+              id="cep"
+              required
+              ref={cepRef}
+              onBlur={checkCep}
+            />
           </label>
 
           <label>
@@ -79,14 +124,14 @@ function App() {
           <div className="actions-wrapper">
             <label className="label-uf-city">
               UF:
-              <select id="select-uf">
+              <select id="select-uf" ref={ufRef}>
                 <option>Insira o CEP</option>
               </select>
             </label>
 
             <label className="label-uf-city">
               cidade:
-              <select id="select-city">
+              <select id="select-city" ref={cityRef}>
                 <option>Insira o CEP</option>
               </select>
             </label>
@@ -118,7 +163,11 @@ function App() {
                 <tr key={index}>
                   <td>{item.cnpj}</td>
                   <td>{item.name}</td>
-                  <a href="#">Edit</a>
+                  <td>
+                    <a href="#" onClick={() => handleEdit(index)}>
+                      Edit
+                    </a>
+                  </td>
                 </tr>
               );
             })}

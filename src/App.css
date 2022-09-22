@@ -127,6 +127,10 @@ button:active {
   background-color: var(--branco);
   color: var(--lilas);
 }
+.invalid-field {
+  border-color: var(--vermelho);
+  color: var(--vermelho);
+}
 
 @media (min-width: 1025px) {
   .app {
