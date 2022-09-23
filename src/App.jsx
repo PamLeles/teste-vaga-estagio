@@ -5,7 +5,6 @@ function App() {
   //atualizar a tela, atraves de uma mudança se usa o useState
   const [data, setData] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
-  const [dataCep, setDataCEP] = useState([]);
   const cnpjRef = useRef();
   const nameRef = useRef();
   const cepRef = useRef();
@@ -19,7 +18,7 @@ function App() {
     event.preventDefault();
     const copyData = [...data];
     /* essa validaçõa vai funcionar quando for clicada em edit e for salva a nova atualização*/
-    if (typeof selectedRow === "number") {
+    if (typeof option === "number") {
       copyData[selectedRow].cnpj = cnpjRef.current.value;
       copyData[selectedRow].name = nameRef.current.value;
       copyData[selectedRow].cep = cepRef.current.value;
@@ -54,18 +53,46 @@ function App() {
     //para pegar o valor atualizado, "procuramos" no data
   }
 
-  //adicionando api cep
-  const checkCep = (e) => {
-    const cep = e.target.value.replace(/\D/g, "");
-    fetch(`https://viacep.com.br/ws/${cep}/json/`)
-      .then((res) => res.json())
-      .then((data) => {
-        cep.length === 8;
-        console.log(data);
-      });
-  };
+  function handleValidateCep(cep) {
+    return cep.length === 8;
+  }
 
-  async function handleEdit(index) {
+  //adicionando api cep
+  const url = "https://viacep.com.br/ws/";
+  async function getAddressDataByCep(cepInput) {
+    const response = await fetch(`${url}${cepInput}/json`);
+    const dataApi = await response.json();
+    return dataApi;
+  }
+
+  // função que esta setando os dados no campos
+  function handleSetFieldsValue(data) {
+    addressRef.current.value = data.logradouro;
+    districtRef.current.value = data.bairro;
+    ufRef.current.value = data.uf;
+    cityRef.current.value = data.localidade;
+  }
+
+  async function checkCep(event) {
+    event.preventDefault();
+
+    const cepInput = event.target.value;
+
+    const isValidCep = handleValidateCep(cepInput);
+
+    if (!isValidCep) {
+      ///addIsInvalidFieldClass("cep");
+      return;
+    }
+
+    const data = await getAddressDataByCep(cepInput);
+
+    console.log(data);
+
+    handleSetFieldsValue(data);
+  }
+
+  function handleEdit(index) {
     //[index] = posição dentro do array;
     setSelectedRow(index);
     cnpjRef.current.value = data[index].cnpj;
@@ -98,7 +125,7 @@ function App() {
               id="cep"
               required
               ref={cepRef}
-              onBlur={checkCep}
+              onBlur={async (event) => await checkCep(event)}
             />
           </label>
 
