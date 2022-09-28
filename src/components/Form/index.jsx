@@ -23,13 +23,14 @@ const Form = ({
   const ufRef = useRef();
   const cityRef = useRef();
 
-  function handleSaveForm(event) {
+  async function handleSaveForm(event) {
     event.preventDefault();
 
     const isValidCnpj = handleValidateCnpj(cnpjRef.current.value);
     const isValidName = handleValidateName(nameRef.current.value);
+    const isValidCep = !!(await getAddressDataByCep(cepRef.current.value));
     /* essa validaçõa vai funcionar quando for clicada em edit e for salva a nova atualização*/
-    if (isValidCnpj && isValidName) {
+    if (isValidCnpj && isValidName && isValidCep) {
       const newData = {
         cnpj: cnpjRef.current.value,
         name: sanitizer(nameRef.current.value),
@@ -54,6 +55,7 @@ const Form = ({
     addressRef.current.value = "";
     numberRef.current.value = "";
     districtRef.current.value = "";
+    setOptions(null, null);
   }
 
   function handleBlurCnpj(event) {
@@ -79,6 +81,9 @@ const Form = ({
   async function getAddressDataByCep(cepInput) {
     const response = await fetch(`${url}${cepInput}/json`);
     const dataApi = await response.json();
+    if (dataApi.erro === "true") {
+      return;
+    }
     return dataApi;
   }
 
@@ -96,13 +101,12 @@ const Form = ({
 
     const isValidCep = handleValidateCep(cepInput);
 
-    if (!isValidCep) {
+    const data = await getAddressDataByCep(cepInput);
+    if (!isValidCep || !data) {
       event.target.classList.add("invalid-field");
       return;
     }
     event.target.classList.remove("invalid-field");
-
-    const data = await getAddressDataByCep(cepInput);
 
     handleSetFieldsValue(data);
   }
