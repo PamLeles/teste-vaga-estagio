@@ -7,3 +7,9 @@
 #root {
   height: 100vh;
 }
+
+@media (max-width: 389px) {
+  #root {
+    height: 100%;
+  }
+}
