@@ -1,7 +1,7 @@
 import React from "react";
 import "./style.css";
 
-const Select = ({ label, value, text, ref }) => {
+const Select = React.forwardRef(({ label, value, text }, ref) => {
   return (
     <label className="label-uf-city">
       {label}
@@ -10,6 +10,5 @@ const Select = ({ label, value, text, ref }) => {
       </select>
     </label>
   );
-};
-
+});
 export default Select;

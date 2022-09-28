@@ -1,4 +1,5 @@
-import React, { useState, useRef } from "react";
+import React from "react";
+import { useRef } from "react";
 import handleValidateCep from "../../helpers/handleValidateCep";
 import { handleValidateCnpj } from "../../helpers/handleValidateCnpj";
 import handleValidateName from "../../helpers/handleValidateName";
@@ -41,15 +42,18 @@ const Form = ({
       };
 
       //campos do formulário vázio
-      cnpjRef.current.value = "";
-      nameRef.current.value = "";
-      cepRef.current.value = "";
-      addressRef.current.value = "";
-      numberRef.current.value = "";
-      districtRef.current.value = "";
+      handleCLearForm();
       //setData está atualizando os dados do data;
       onSaveForm(newData);
     }
+  }
+  function handleCLearForm() {
+    cnpjRef.current.value = "";
+    nameRef.current.value = "";
+    cepRef.current.value = "";
+    addressRef.current.value = "";
+    numberRef.current.value = "";
+    districtRef.current.value = "";
   }
 
   function handleBlurCnpj(event) {
@@ -109,14 +113,14 @@ const Form = ({
         <h1 className="form-title">Formulário de Cadastro</h1>
         <div className="label-div">
           <Input
-            label="CNPJ"
+            label="CNPJ:"
             type="number"
             id="cnpj"
             ref={cnpjRef}
             onBlur={handleBlurCnpj}
           />
           <Input
-            label="Nome da Empresa"
+            label="Nome da Empresa:"
             type="text"
             id="nomeEmpresa"
             ref={nameRef}
@@ -154,7 +158,9 @@ const Form = ({
           />
         </div>
         <div className="actions-wrapper">
-          <button className="btn-cancel">Limpar</button>
+          <button className="btn-cancel" onClick={handleCLearForm}>
+            Limpar
+          </button>
           <button className="btn-save" onClick={handleSaveForm}>
             Salvar
           </button>

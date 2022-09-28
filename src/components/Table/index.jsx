@@ -1,4 +1,5 @@
 import React from "react";
+import TableRow from "../TableRow";
 import "./style.css";
 
 const Table = ({ onClickEdit, data }) => {
@@ -18,15 +19,13 @@ const Table = ({ onClickEdit, data }) => {
           <tbody id="table-content">
             {data.map((item, index) => {
               return (
-                <tr key={index}>
-                  <td>{item.cnpj}</td>
-                  <td>{item.name}</td>
-                  <td>
-                    <a href="#" onClick={() => onClickEdit(index)}>
-                      Edit
-                    </a>
-                  </td>
-                </tr>
+                <TableRow
+                  key={index}
+                  index={index}
+                  cnpj={item.cnpj}
+                  name={item.name}
+                  onClick={onClickEdit}
+                />
               );
             })}
           </tbody>
@@ -35,5 +34,4 @@ const Table = ({ onClickEdit, data }) => {
     </div>
   );
 };
-
 export default Table;
