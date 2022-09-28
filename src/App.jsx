@@ -3,7 +3,7 @@ import { useRef } from "react";
 import { useState } from "react";
 import "./App.css";
 import Form from "./components/Form";
-import Table from "./components/table";
+import Table from "./components/Table";
 
 function App() {
   //atualizar a tela, atraves de uma mudança se usa o useState
