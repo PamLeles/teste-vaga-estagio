@@ -29,7 +29,7 @@ const Form = ({
     const isValidCnpj = handleValidateCnpj(cnpjRef.current.value);
     const isValidName = handleValidateName(nameRef.current.value);
     const isValidCep = !!(await getAddressDataByCep(cepRef.current.value));
-    /* essa validaçõa vai funcionar quando for clicada em edit e for salva a nova atualização*/
+    /* essa validação vai funcionar quando for clicada em edit e for salva a nova atualização*/
     if (isValidCnpj && isValidName && isValidCep) {
       const newData = {
         cnpj: cnpjRef.current.value,
@@ -79,12 +79,17 @@ const Form = ({
   //adicionando api cep
   const url = "https://viacep.com.br/ws/";
   async function getAddressDataByCep(cepInput) {
-    const response = await fetch(`${url}${cepInput}/json`);
-    const dataApi = await response.json();
-    if (dataApi.erro === "true") {
+    try {
+      const response = await fetch(`${url}${cepInput}/json`);
+      const dataApi = await response.json();
+      if (dataApi.erro === "true") {
+        return;
+      }
+      return dataApi;
+    } catch (error) {
+      console.log(error);
       return;
     }
-    return dataApi;
   }
 
   // função que esta setando os dados no campos
@@ -102,6 +107,7 @@ const Form = ({
     const isValidCep = handleValidateCep(cepInput);
 
     const data = await getAddressDataByCep(cepInput);
+    console.log(!isValidCep || !data);
     if (!isValidCep || !data) {
       event.target.classList.add("invalid-field");
       return;

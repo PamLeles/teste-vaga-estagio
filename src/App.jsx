@@ -6,7 +6,7 @@ import Form from "./components/Form";
 import Table from "./components/Table";
 
 function App() {
-  //atualizar a tela, atraves de uma mudança se usa o useState
+  //atualizar a tela, através de uma mudança se usa o useState
   const [data, setData] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
   const [selectOptionUf, setSelectOptionUf] = useState(null);
